@@ -1,0 +1,26 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Runtime artifacts
+.activegraph/
+*.db
+*.db-wal
+*.db-shm
+*.log
+
+# Node (package-lock only)
+node_modules/
+package-lock.json
+
+# Test output
+tests/.out/
+
+# Temp
+*.tmp
+*.swp
+*~
+
+# Markdown docs (internal) — README.md is the only published .md
+*.md
+!README.md

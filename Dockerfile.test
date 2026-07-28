@@ -1,0 +1,23 @@
+# amd64 Linux test image.
+# Alpine edge is the only distro currently packaging both prerequisites:
+#   bash >= 5.3   (${ cmd; } funsubs, EPOCHREALTIME, wait -n)
+#   sqlite >= 3.53.3 with sha3()/readfile()/JSONB in the CLI shell
+# socat is installed because `serve` requires it, so this image exercises the
+# concurrent backend a socat-less macOS box cannot.
+#
+# Deliberately NO GNU coreutils/grep/sed: under x86_64 emulation their Alpine
+# builds fail to relocate (`renameat2: symbol not found`). Busybox provides
+# everything the suite uses, and the tests are already written for BSD/busybox
+# tool flags because they run on macOS.
+FROM --platform=linux/amd64 alpine:edge
+
+RUN apk add --no-cache bash sqlite socat jq git netcat-openbsd
+
+WORKDIR /work
+COPY --chmod=755 active-graph.sh ./active-graph.sh
+COPY --chmod=755 tests ./tests
+
+ENV AG_SQLITE=/usr/bin/sqlite3
+ENV TMPDIR=/tmp
+
+CMD ["bash", "tests/run-all.sh"]
